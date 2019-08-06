@@ -1,8 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require('inquirer');
 
-// prompt users with two messages (inquirer)
-//ask them the ID of the product they would like to buy
 //ask how many units of the product they would like to buy
 // create the connection information for the sql database
 var connection = mysql.createConnection({
@@ -24,6 +22,9 @@ connection.connect(function(err) {
 });
 
 function bamazon(){
+
+  // prompt users with two messages (inquirer)
+
 inquirer
   .prompt([
 
@@ -43,17 +44,43 @@ inquirer
 
 }
 
+
+//check if your store has enough of the product to meet the customer's request.
+
+
 function checkItem(){
 
 
     connection.query("SELECT * FROM products WHERE item_id =" +" " + choice+";", function(err, results) {
       if (err) throw err;
-      console.log(results[0);
-      console.log()
-    }
-  )}
+      var stock = results[0].stock_quantity;
+      var item = results[0].product_name;
+      var price = results[0].price;
 
-//check if your store has enough of the product to meet the customer's request.
+      console.log("You have chosen" +" "+ item);
+      console.log("There are currently" + " " + stock + " "+ "in stock.");
+      console.log("The price is" + " "+ "$"+price+" "+"each.")
+
+      inquirer
+  .prompt([
+
+    {
+      type:"input",
+      name:"quantity",
+      message:"How many would you like to purchase?",
+      
+    },
+    
+  ])
+  .then(answers => {
+    choice = answers.ID;
+  console.log(choice)
+  });
+
+}
+    
+  )};
+
 //If not, the app should log a phrase like Insufficient quantity!, and then prevent the order from going through.
 //Else, updating the SQL database to reflect the remaining quantity.
 //show the customer the total cost of their purchase.
