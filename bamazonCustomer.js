@@ -53,9 +53,9 @@ function checkItem(){
 
     connection.query("SELECT * FROM products WHERE item_id =" +" " + choice+";", function(err, results) {
       if (err) throw err;
-      var stock = results[0].stock_quantity;
-      var item = results[0].product_name;
-      var price = results[0].price;
+       stock = results[0].stock_quantity;
+       item = results[0].product_name;
+       price = results[0].price;
 
       console.log("You have chosen" +" "+ item);
       console.log("There are currently" + " " + stock + " "+ "in stock.");
@@ -73,14 +73,92 @@ function checkItem(){
     
   ])
   .then(answers => {
-    choice = answers.ID;
-  console.log(choice)
+  var quantity = parseInt(answers.quantity);
+  var difference = stock - quantity;
+  if(quantity <= stock){
+    console.log("You got it!");
+
+    connection.query("UPDATE products SET stock_quantity =" +" "+ difference + " " + "WHERE product_name =\""+item+"\";",function(err, results) {
+
+      console.log(difference+" " + "remain in stock");
+
+
+      inquirer
+
+      .prompt([
+  
+        {
+          type:"confirm",
+          name:"new",
+          message:"Would you like to search for a new item?",
+          
+        }
+        
+      ])
+      .then(answers => {
+  
+  
+          if(answers.new == true){
+  
+            bamazon();
+  
+  
+  
+          }else{
+  
+            console.log("Thank you for visiting bamazon!")
+          }
+
+
+
+    })
+  })
+  }else{
+
+    console.log("Sorry, there is not enough to fill the order.")
+
+    inquirer
+
+    .prompt([
+
+      {
+        type:"confirm",
+        name:"new",
+        message:"Would you like to search for a new item?",
+        
+      }
+      
+    ])
+    .then(answers => {
+
+
+        if(answers.new == true){
+
+          bamazon();
+
+
+
+        }else{
+
+          console.log("Thank you for visiting bamazon!")
+        }
+  
   });
 
 }
     
-  )};
+})
 
-//If not, the app should log a phrase like Insufficient quantity!, and then prevent the order from going through.
+    })};
+
+    //If not, the app should log a phrase like Insufficient quantity!, and then prevent the order from going through.
 //Else, updating the SQL database to reflect the remaining quantity.
 //show the customer the total cost of their purchase.
+
+
+//create  inseert
+//read    SELECT
+//update  Update
+//delete  Delete
+
+
